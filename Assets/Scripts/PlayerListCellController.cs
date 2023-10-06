@@ -8,11 +8,13 @@ public class PlayerListCellController : MonoBehaviour
 {
     private TMP_Text playerName;
     private TMP_Text ready;
+    public PlayerInfo playerInfo { get; private set; }
     
-    public void Init(ulong playerId, bool isReady) {
+    public void Init(PlayerInfo playerInfo) {
+        this.playerInfo = playerInfo;
         playerName = transform.Find("Name").GetComponent<TMP_Text>();
         ready = transform.Find("Ready").GetComponent<TMP_Text>();
-        playerName.text = "玩家:" + playerId.ToString();
-        ready.text = isReady ? "准备" : "未准备";
+        playerName.text = "玩家:" + playerInfo.playerId.ToString();
+        ready.text = playerInfo.isReady ? "准备" : "未准备";
     }
 }

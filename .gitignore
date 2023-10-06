@@ -62,6 +62,8 @@ sysinfo.txt
 *.app
 *.meta
 
+*.asset
+
 # Crashlytics generated file
 crashlytics-build.properties
 
