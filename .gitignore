@@ -75,3 +75,6 @@ crashlytics-build.properties
 /Packages/*
 /Assets/Settings/*
 /Assets/TutorialInfo/*
+/Assets/SharpUI/*
+/Assets/TextMesh Pro/*
+.idea/*
