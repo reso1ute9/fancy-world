@@ -171,7 +171,7 @@ MonoBehaviour:
   NetworkConfig:
     ProtocolVersion: 0
     NetworkTransport: {fileID: 180960127}
-    PlayerPrefab: {fileID: 4782626616453326714, guid: 25d55a4154eef9141a65e5e5be8b628b,
+    PlayerPrefab: {fileID: 4859053766454309633, guid: 082fc5bd20c67e4499cd34b9b856233a,
       type: 3}
     Prefabs:
       NetworkPrefabsLists:
@@ -231,6 +231,7 @@ GameObject:
   m_Component:
   - component: {fileID: 1573586390}
   - component: {fileID: 1573586391}
+  - component: {fileID: 1573586392}
   m_Layer: 0
   m_Name: GameManager
   m_TagString: Untagged
@@ -265,6 +266,26 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: e75617e388428544fabb29ec530ec1ac, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
+--- !u!114 &1573586392
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1573586389}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: d5a57f767e5e46a458fc5d3c628d0cbb, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  GlobalObjectIdHash: 582384738
+  AlwaysReplicateAsRoot: 0
+  SynchronizeTransform: 1
+  ActiveSceneSynchronization: 0
+  SceneMigrationSynchronization: 1
+  SpawnWithObservers: 1
+  DontDestroyWithOwner: 0
+  AutoObjectParentSync: 1
 --- !u!1660057539 &9223372036854775807
 SceneRoots:
   m_ObjectHideFlags: 0
