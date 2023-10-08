@@ -1,14 +1,17 @@
-using System;
 using System.Collections;
 using System.Collections.Generic;
 using TMPro;
 using Unity.Netcode;
 using UnityEngine.UI;
 using UnityEngine;
+using Cinemachine;
 
 public class GameController : NetworkBehaviour {
-    [SerializeField] 
-    private Transform canvers;
+    public static GameController Instance;
+    
+    [SerializeField] private Transform canvers;
+
+    [SerializeField] private CinemachineVirtualCamera cameraController;
 
     private TMP_InputField inputMessage;
     private RectTransform DialogContent;
@@ -16,6 +19,7 @@ public class GameController : NetworkBehaviour {
     private Button sendButton;
 
     public override void OnNetworkSpawn() {
+        Instance = this;
         // 输入框组件: 待发送的输入文本
         inputMessage = canvers.Find("Dialog/InputMessage").GetComponent<TMP_InputField>();
         // 聊天框Content
@@ -30,16 +34,11 @@ public class GameController : NetworkBehaviour {
     }
     
     private void OnSendButtonClick() {
-        UnityEngine.Debug.Log("input message:" + inputMessage.text);
         // 更新聊天框显示内容
         if (string.IsNullOrEmpty(inputMessage.text)) {
             return;
         }
         ulong playerId = NetworkManager.Singleton.LocalClientId;
-        Debug.Log("playerInfoDataDict count:" + GameManager.Instance.playerInfoDataDict.Count);
-        foreach (var key in GameManager.Instance.playerInfoDataDict) {
-            Debug.Log("-key:" + key);
-        }
         PlayerInfoData playerInfoData = GameManager.Instance.playerInfoDataDict[playerId];
         AddDialogCell(playerInfoData.playerName, inputMessage.text);
 
@@ -79,5 +78,17 @@ public class GameController : NetworkBehaviour {
         // 初始化控制UI脚本展示聊天框结果
         cell.GetComponent<DialogListCellController>().Initial(playerName, content);
         cell.gameObject.SetActive(true);
+    }
+    
+    // 设置相机跟随目标
+    public void SetFollowTarget(Transform target) {
+        cameraController.Follow = target;
+    }
+    
+    // 获得玩家的出生坐标
+    public Vector3 GetPlayerSpawnPosition() {
+        // 生成前方和右方方向向量的一个随机结果
+        Vector3 offset = transform.forward * Random.Range(-10, 10) + transform.right * Random.Range(-10, 10);
+        return transform.position + offset;
     }
 }
