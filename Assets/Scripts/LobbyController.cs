@@ -6,29 +6,6 @@ using Unity.VisualScripting;
 using UnityEngine;
 using UnityEngine.UI;
 
-public enum GENDER {
-    Male,
-    Female
-};
-
-// 为了在network中进行传递, 储存数据的结构体需要继承自INetworkSerializable并自行实现序列化方法
-public struct PlayerInfo : INetworkSerializable {
-    public ulong playerId;
-    public bool isReady;
-    public GENDER gender;
-
-    public PlayerInfo(ulong playerId, bool isReady, GENDER gender) {
-        this.playerId = playerId;
-        this.isReady = isReady;
-        this.gender = gender;
-    }
-
-    void Unity.Netcode.INetworkSerializable.NetworkSerialize<T>(BufferSerializer<T> serializer) {
-        serializer.SerializeValue(ref playerId);
-        serializer.SerializeValue(ref isReady);
-        serializer.SerializeValue(ref gender);
-    }
-}
 
 public class LobbyController : NetworkBehaviour
 {
@@ -40,8 +17,10 @@ public class LobbyController : NetworkBehaviour
     private Button startButton;
     private Toggle readyToggle;
 
+    private TMP_InputField nickname;
+
     private Dictionary<ulong, PlayerListCellController> playerListCellDict;
-    private Dictionary<ulong, PlayerInfo> playerInfoDict;
+    private Dictionary<ulong, PlayerInfoData> playerInfoDataDict;
     
     // 注意: 该方法会先于Start
     public override void OnNetworkSpawn() {
@@ -49,20 +28,25 @@ public class LobbyController : NetworkBehaviour
             NetworkManager.OnClientConnectedCallback += OnClientConnect;
         }
         
-        playerInfoDict = new Dictionary<ulong, PlayerInfo>();
+        playerInfoDataDict = new Dictionary<ulong, PlayerInfoData>();
         
         content = canvers.Find("PlayerList/Viewport/Content");
         cell = content.Find("Cell").gameObject;
-        startButton = canvers.Find("StartButton").GetComponent<Button>();
-        readyToggle = canvers.Find("ReadyToggle").GetComponent<Toggle>();
         
+        startButton = canvers.Find("StartButton").GetComponent<Button>();
         startButton.onClick.AddListener(OnStartButtonClick);
+        
+        readyToggle = canvers.Find("ReadyToggle").GetComponent<Toggle>();
         readyToggle.onValueChanged.AddListener(OnReadyToggleClick);
 
+        nickname = canvers.Find("Nickname").GetComponent<TMP_InputField>();
+        nickname.onEndEdit.AddListener(OnEditNicknameEnd);
+        
         playerListCellDict = new Dictionary<ulong, PlayerListCellController>();
         
         // 将本地玩家添加到网络中
-        PlayerInfo playerInfo = new PlayerInfo(NetworkManager.LocalClientId, false, GENDER.Male);
+        // 玩家默认属性: nickname = "玩家"; ready = false; gender = "male"
+        PlayerInfoData playerInfo = new PlayerInfoData(NetworkManager.LocalClientId);
         AddPlayer(playerInfo);
         
         // 添加监听选人toggle变化的事件
@@ -74,19 +58,19 @@ public class LobbyController : NetworkBehaviour
         base.OnNetworkSpawn();
     }
     
-    public void AddPlayer(PlayerInfo playerInfo) {
+    public void AddPlayer(PlayerInfoData playerInfo) {
         GameObject cloneCell = Instantiate(cell);
         cloneCell.SetActive(true);
         cloneCell.transform.SetParent(content, false);
         PlayerListCellController playerListCellController = cloneCell.GetComponent<PlayerListCellController>();
         playerListCellController.Init(playerInfo);
         playerListCellDict.Add(playerInfo.playerId, playerListCellController);
-        playerInfoDict.Add(playerInfo.playerId, playerInfo);
+        playerInfoDataDict.Add(playerInfo.playerId, playerInfo);
     }
     
     // 当有新的客户端链接时会调用本方法
     private void OnClientConnect(ulong playerId) {
-        PlayerInfo playerInfo = new PlayerInfo(playerId, false, GENDER.Male);
+        PlayerInfoData playerInfo = new PlayerInfoData(playerId);
         AddPlayer(playerInfo);
 
         UpdatePlayerInfoAllClient();
@@ -95,7 +79,7 @@ public class LobbyController : NetworkBehaviour
     // 远程: 服务端通知其他客户端添加玩家
     void UpdatePlayerInfoAllClient() {
         // 遍历通知所有的客户端把它们没有的玩家添加进去并更新UI
-        foreach (PlayerInfo playerInfo in playerInfoDict.Values) {
+        foreach (PlayerInfoData playerInfo in playerInfoDataDict.Values) {
             UpdatePlayerInfoClientRpc(playerInfo);
         }
     }
@@ -106,12 +90,12 @@ public class LobbyController : NetworkBehaviour
     // 2. Server: 服务端
     // 3. Client: 客户端
     [ClientRpc]
-    void UpdatePlayerInfoClientRpc(PlayerInfo playerInfo) {
+    void UpdatePlayerInfoClientRpc(PlayerInfoData playerInfo) {
         // 仅当当前是Client时才更新客户端中的PlayerInfo
         if (!IsServer) {
             // 如果客户端中已经存储了playerId, 需要更新一下最新数据
-            if (playerInfoDict.ContainsKey(playerInfo.playerId)) {
-                playerInfoDict[playerInfo.playerId] = playerInfo;
+            if (playerInfoDataDict.ContainsKey(playerInfo.playerId)) {
+                playerInfoDataDict[playerInfo.playerId] = playerInfo;
             }
             else {
                 AddPlayer(playerInfo);    
@@ -123,9 +107,9 @@ public class LobbyController : NetworkBehaviour
     
     // 远程: 服务端更新玩家信息
     [ServerRpc(RequireOwnership = false)]
-    void UpdatePlayerInfoServerRpc(PlayerInfo playerInfo) {
+    void UpdatePlayerInfoServerRpc(PlayerInfoData playerInfo) {
         // 需要先修改当前player的信息再通知客户端进行修改
-        playerInfoDict[playerInfo.playerId] = playerInfo;
+        playerInfoDataDict[playerInfo.playerId] = playerInfo;
         // 更新玩家UI界面准备状态和性别
         playerListCellDict[playerInfo.playerId].UpdatePlayerCellInfo(playerInfo);
         UpdatePlayerInfoAllClient();
@@ -141,7 +125,7 @@ public class LobbyController : NetworkBehaviour
             // 通过告知服务端来更新所有客户端数据
             // 1. 客户端向服务端发通知, 通知服务端执行UpdateAllPlayerInfo函数
             // 2. 服务端执行UpdateAllPlayerInfo后会遍历通知所有的客户端把它们没有的玩家添加进去
-            UpdatePlayerInfoServerRpc(playerInfoDict[NetworkManager.LocalClientId]);
+            UpdatePlayerInfoServerRpc(playerInfoDataDict[NetworkManager.LocalClientId]);
         }
     }
 
@@ -154,28 +138,29 @@ public class LobbyController : NetworkBehaviour
         // 将UI界面设置为Ready
         playerListCellDict[playerId].SetReady(args);
         // 更新玩家信息数据
-        UpdatePlayerInfo(playerId, args, playerInfoDict[playerId].gender);
+        UpdatePlayerInfo(playerId, playerInfoDataDict[playerId].playerName, args, playerInfoDataDict[playerId].gender);
         // 更新玩家信息
         UpdatePlayerInfoRemote();
     }
 
-    private void UpdatePlayerInfo(ulong playerId, bool isReady, GENDER gender) {
-        PlayerInfo playerInfo = playerInfoDict[playerId];
+    private void UpdatePlayerInfo(ulong playerId, string playerName, bool isReady, GENDER gender) {
+        PlayerInfoData playerInfo = playerInfoDataDict[playerId];
+        playerInfo.playerName = playerName;
         playerInfo.isReady = isReady;
         playerInfo.gender = gender;
-        playerInfoDict[playerId] = playerInfo;
+        playerInfoDataDict[playerId] = playerInfo;
         // 更新UI信息
         UpdatePlayerCellInfo(playerInfo);
     }
     
     // UI: 根据playerInfo修改准备Toggle UI界面
-    private void UpdatePlayerCellInfo(PlayerInfo playerInfo) {
+    private void UpdatePlayerCellInfo(PlayerInfoData playerInfo) {
         playerListCellDict[playerInfo.playerId].UpdatePlayerCellInfo(playerInfo);
     }
     
     // UI: 根据playerInfo修改准备Toggle UI界面
     private void UpdatePlayerCellsInfo() {
-        foreach (var item in playerInfoDict) {
+        foreach (var item in playerInfoDataDict) {
             // 更新玩家UI界面准备状态和性别
             UpdatePlayerCellInfo(item.Value);
         }
@@ -183,13 +168,14 @@ public class LobbyController : NetworkBehaviour
 
     private void OnMaleToggleChange(bool isMale) {
         ulong playerId = NetworkManager.LocalClientId;
+        // 更新本地数据和UI
         if (isMale) {
             PlayerSelectController.Instance.SwitchGender(GENDER.Male);
-            UpdatePlayerInfo(playerId, playerInfoDict[playerId].isReady, GENDER.Male);
+            UpdatePlayerInfo(playerId, playerInfoDataDict[playerId].playerName, playerInfoDataDict[playerId].isReady, GENDER.Male);
         }
         else {
             PlayerSelectController.Instance.SwitchGender(GENDER.Female);
-            UpdatePlayerInfo(playerId, playerInfoDict[playerId].isReady, GENDER.Female);
+            UpdatePlayerInfo(playerId, playerInfoDataDict[playerId].playerName, playerInfoDataDict[playerId].isReady, GENDER.Female);
         }
         // 更新玩家信息
         UpdatePlayerInfoRemote();
@@ -197,15 +183,27 @@ public class LobbyController : NetworkBehaviour
 
     private void OnFemaleToggleChange(bool isFemale) {
         ulong playerId = NetworkManager.LocalClientId;
+        // 更新本地数据和UI
         if (isFemale) {
             PlayerSelectController.Instance.SwitchGender(GENDER.Female);
-            UpdatePlayerInfo(playerId, playerInfoDict[playerId].isReady, GENDER.Female);
+            UpdatePlayerInfo(playerId, playerInfoDataDict[playerId].playerName, playerInfoDataDict[playerId].isReady, GENDER.Female);
         }
         else {
             PlayerSelectController.Instance.SwitchGender(GENDER.Male);
-            UpdatePlayerInfo(playerId, playerInfoDict[playerId].isReady, GENDER.Male);
+            UpdatePlayerInfo(playerId, playerInfoDataDict[playerId].playerName, playerInfoDataDict[playerId].isReady, GENDER.Male);
         }
-        // 更新玩家信息
+        // 更新远程玩家数据和UI
+        UpdatePlayerInfoRemote();
+    }
+
+    private void OnEditNicknameEnd(string name) {
+        if (string.IsNullOrEmpty(name)) {
+            return;
+        }
+        ulong playerId = NetworkManager.LocalClientId;
+        // 更新本地数据和UI
+        UpdatePlayerInfo(playerId, name, playerInfoDataDict[playerId].isReady, playerInfoDataDict[playerId].gender);
+        // 更新远程玩家数据和UI
         UpdatePlayerInfoRemote();
     }
 }
