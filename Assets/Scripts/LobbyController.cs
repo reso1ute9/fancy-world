@@ -76,11 +76,19 @@ public class LobbyController : NetworkBehaviour
         UpdatePlayerInfoAllClient();
     }
     
-    // 远程: 服务端通知其他客户端添加玩家
+    // 远程: 服务端通知其他客户端更新玩家信息
     void UpdatePlayerInfoAllClient() {
+        bool allReady = true;
         // 遍历通知所有的客户端把它们没有的玩家添加进去并更新UI
         foreach (PlayerInfoData playerInfo in playerInfoDataDict.Values) {
             UpdatePlayerInfoClientRpc(playerInfo);
+            allReady &= playerInfo.isReady;
+        }
+        // 服务端显示开始游戏按钮
+        if (allReady) {
+            startButton.gameObject.SetActive(true);
+        } else {
+            startButton.gameObject.SetActive(false);
         }
     }
     
@@ -112,6 +120,7 @@ public class LobbyController : NetworkBehaviour
         playerInfoDataDict[playerInfo.playerId] = playerInfo;
         // 更新玩家UI界面准备状态和性别
         playerListCellDict[playerInfo.playerId].UpdatePlayerCellInfo(playerInfo);
+        // 通知所有客户端更新玩家信息和UI
         UpdatePlayerInfoAllClient();
     }
     
@@ -130,7 +139,7 @@ public class LobbyController : NetworkBehaviour
     }
 
     private void OnStartButtonClick() {
-        
+        GameManager.Instance.LoadScene("GameScene");
     }
 
     private void OnReadyToggleClick(bool args) {
