@@ -14,7 +14,7 @@ public struct PlayerInfoData : INetworkSerializable {
     
     public PlayerInfoData(ulong playerId) {
         this.playerId = playerId;
-        this.playerName = "玩家:" + playerId;
+        this.playerName = "玩家" + playerId;
         this.isReady = false;
         this.gender = GENDER.Male;
     }
@@ -26,7 +26,7 @@ public struct PlayerInfoData : INetworkSerializable {
         this.gender = gender;
     }
 
-    void Unity.Netcode.INetworkSerializable.NetworkSerialize<T>(BufferSerializer<T> serializer) {
+    void INetworkSerializable.NetworkSerialize<T>(BufferSerializer<T> serializer) {
         serializer.SerializeValue(ref playerId);
         serializer.SerializeValue(ref playerName);
         serializer.SerializeValue(ref isReady);

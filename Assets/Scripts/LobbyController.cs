@@ -139,6 +139,8 @@ public class LobbyController : NetworkBehaviour
     }
 
     private void OnStartButtonClick() {
+        Debug.Log("Lobby playerInfoDataDict size:" + playerInfoDataDict.Count);
+        GameManager.Instance.StartGame(playerInfoDataDict);
         GameManager.Instance.LoadScene("GameScene");
     }
 
