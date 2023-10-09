@@ -26,9 +26,12 @@ public class PlayerInit : NetworkBehaviour
             body = transform.Find("Female");
             GetComponent<PlayerSync>().SetTarget(GENDER.Female);
         }
+        body.GetComponent<Rigidbody>().isKinematic = false;
         // 避免提前执行
         GetComponent<PlayerSync>().enabled = true;
-        body.gameObject.SetActive(true);
+        // 关闭其他预制体
+        Transform otherPrefab = transform.GetChild(1 - (int)playerInfoData.gender);
+        otherPrefab.gameObject.SetActive(false);
         // 设置摄像机
         if (IsLocalPlayer) {
             GameController.Instance.SetFollowTarget(body);

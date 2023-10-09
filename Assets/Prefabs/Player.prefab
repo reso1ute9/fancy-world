@@ -151,7 +151,7 @@ PrefabInstance:
     - target: {fileID: 6831264621477357666, guid: ce5bb9e7b330ead4db691e8f8c8605d2,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     m_RemovedComponents: []
     m_RemovedGameObjects: []
@@ -169,6 +169,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 8694418927392660706}
+    - targetCorrespondingSourceObject: {fileID: 6831264621477357666, guid: ce5bb9e7b330ead4db691e8f8c8605d2,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 6786884185926987724}
   m_SourcePrefab: {fileID: 100100000, guid: ce5bb9e7b330ead4db691e8f8c8605d2, type: 3}
 --- !u!1 &6169622141933312296 stripped
 GameObject:
@@ -199,7 +203,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
@@ -243,6 +247,54 @@ MonoBehaviour:
   JumpTime: 1
   InputForward: 0
   RotatePlayer: 1
+--- !u!114 &6786884185926987724
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 6169622141933312296}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 605363160
+    DestinationState: -127211926
+    TransitionDuration: 0.25
+    TriggerNameHash: -47317214
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 605363160
+    DestinationState: -777891176
+    TransitionDuration: 0.25
+    TriggerNameHash: 1680125592
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 605363160
+    DestinationState: 2143994633
+    TransitionDuration: 0.25
+    TriggerNameHash: 321101326
+    TransitionIndex: 2
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 605363160
+    DestinationState: -704786955
+    TransitionDuration: 0.25
+    TriggerNameHash: -1924723795
+    TransitionIndex: 3
+  m_Animator: {fileID: 6440023736971146952}
+--- !u!95 &6440023736971146952 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 5912363380717881218, guid: ce5bb9e7b330ead4db691e8f8c8605d2,
+    type: 3}
+  m_PrefabInstance: {fileID: 816101908447506762}
+  m_PrefabAsset: {fileID: 0}
 --- !u!4 &6833427430257034130 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 6162708068869714648, guid: ce5bb9e7b330ead4db691e8f8c8605d2,
@@ -265,7 +317,7 @@ PrefabInstance:
     - target: {fileID: 1621542521912444653, guid: f7b308459f9fdb54c84d2a79fd34f6b5,
         type: 3}
       propertyPath: m_IsActive
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 1891944521414355213, guid: f7b308459f9fdb54c84d2a79fd34f6b5,
         type: 3}
@@ -338,6 +390,10 @@ PrefabInstance:
         type: 3}
       insertIndex: -1
       addedObject: {fileID: 9010807669358352286}
+    - targetCorrespondingSourceObject: {fileID: 1621542521912444653, guid: f7b308459f9fdb54c84d2a79fd34f6b5,
+        type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 1797667127734731150}
   m_SourcePrefab: {fileID: 100100000, guid: f7b308459f9fdb54c84d2a79fd34f6b5, type: 3}
 --- !u!1 &2387762851263473763 stripped
 GameObject:
@@ -368,7 +424,7 @@ Rigidbody:
   m_ImplicitCom: 1
   m_ImplicitTensor: 1
   m_UseGravity: 1
-  m_IsKinematic: 0
+  m_IsKinematic: 1
   m_Interpolate: 0
   m_Constraints: 112
   m_CollisionDetection: 0
@@ -412,9 +468,57 @@ MonoBehaviour:
   JumpTime: 1
   InputForward: 0
   RotatePlayer: 1
+--- !u!114 &1797667127734731150
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2387762851263473763}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  TransitionStateInfoList:
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 605363160
+    DestinationState: -127211926
+    TransitionDuration: 0.25
+    TriggerNameHash: -47317214
+    TransitionIndex: 0
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 605363160
+    DestinationState: -777891176
+    TransitionDuration: 0.25
+    TriggerNameHash: 1680125592
+    TransitionIndex: 1
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 605363160
+    DestinationState: 2143994633
+    TransitionDuration: 0.25
+    TriggerNameHash: 321101326
+    TransitionIndex: 2
+  - IsCrossFadeExit: 0
+    Layer: 0
+    OriginatingState: 605363160
+    DestinationState: -704786955
+    TransitionDuration: 0.25
+    TriggerNameHash: -1924723795
+    TransitionIndex: 3
+  m_Animator: {fileID: 3306311145861711747}
 --- !u!4 &3055930963069416153 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 2146863495733845079, guid: f7b308459f9fdb54c84d2a79fd34f6b5,
+    type: 3}
+  m_PrefabInstance: {fileID: 4009305364442295950}
+  m_PrefabAsset: {fileID: 0}
+--- !u!95 &3306311145861711747 stripped
+Animator:
+  m_CorrespondingSourceObject: {fileID: 1891944521414355213, guid: f7b308459f9fdb54c84d2a79fd34f6b5,
     type: 3}
   m_PrefabInstance: {fileID: 4009305364442295950}
   m_PrefabAsset: {fileID: 0}
