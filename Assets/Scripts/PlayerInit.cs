@@ -21,13 +21,18 @@ public class PlayerInit : NetworkBehaviour
         Transform body;
         if (playerInfoData.gender == GENDER.Male) {
             body = transform.Find("Male");
+            GetComponent<PlayerSync>().SetTarget(GENDER.Male);
         } else {
             body = transform.Find("Female");
+            GetComponent<PlayerSync>().SetTarget(GENDER.Female);
         }
+        // 避免提前执行
+        GetComponent<PlayerSync>().enabled = true;
         body.gameObject.SetActive(true);
         // 设置摄像机
         if (IsLocalPlayer) {
             GameController.Instance.SetFollowTarget(body);
+            body.GetComponent<PlayerMove>().enabled = true;
         }
         // 设置玩家随机出生点
         transform.position = GameController.Instance.GetPlayerSpawnPosition();
