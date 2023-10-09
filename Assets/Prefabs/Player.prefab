@@ -32,8 +32,8 @@ Transform:
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
   m_Children:
-  - {fileID: 3055930963069416153}
   - {fileID: 6833427430257034130}
+  - {fileID: 3055930963069416153}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &2594477112713580746
@@ -172,7 +172,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 6831264621477357666, guid: ce5bb9e7b330ead4db691e8f8c8605d2,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 6786884185926987724}
+      addedObject: {fileID: 1361651775120944106}
   m_SourcePrefab: {fileID: 100100000, guid: ce5bb9e7b330ead4db691e8f8c8605d2, type: 3}
 --- !u!1 &6169622141933312296 stripped
 GameObject:
@@ -247,7 +247,7 @@ MonoBehaviour:
   JumpTime: 1
   InputForward: 0
   RotatePlayer: 1
---- !u!114 &6786884185926987724
+--- !u!114 &1361651775120944106
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -256,7 +256,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 6169622141933312296}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Script: {fileID: 11500000, guid: 543cd9c5644f5554b918530aefe58cfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TransitionStateInfoList:
@@ -393,7 +393,7 @@ PrefabInstance:
     - targetCorrespondingSourceObject: {fileID: 1621542521912444653, guid: f7b308459f9fdb54c84d2a79fd34f6b5,
         type: 3}
       insertIndex: -1
-      addedObject: {fileID: 1797667127734731150}
+      addedObject: {fileID: 7588404921352164932}
   m_SourcePrefab: {fileID: 100100000, guid: f7b308459f9fdb54c84d2a79fd34f6b5, type: 3}
 --- !u!1 &2387762851263473763 stripped
 GameObject:
@@ -468,7 +468,7 @@ MonoBehaviour:
   JumpTime: 1
   InputForward: 0
   RotatePlayer: 1
---- !u!114 &1797667127734731150
+--- !u!114 &7588404921352164932
 MonoBehaviour:
   m_ObjectHideFlags: 0
   m_CorrespondingSourceObject: {fileID: 0}
@@ -477,7 +477,7 @@ MonoBehaviour:
   m_GameObject: {fileID: 2387762851263473763}
   m_Enabled: 1
   m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: e8d0727d5ae3244e3b569694d3912374, type: 3}
+  m_Script: {fileID: 11500000, guid: 543cd9c5644f5554b918530aefe58cfb, type: 3}
   m_Name: 
   m_EditorClassIdentifier: 
   TransitionStateInfoList:
