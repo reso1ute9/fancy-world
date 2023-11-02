@@ -1813,7 +1813,7 @@ MonoBehaviour:
     m_Bits: 0
   m_MinimumDistanceFromTarget: 0.1
   m_AvoidObstacles: 1
-  m_DistanceLimit: 0
+  m_DistanceLimit: 5
   m_MinimumOcclusionTime: 0
   m_CameraRadius: 0.1
   m_Strategy: 1
@@ -2216,7 +2216,7 @@ MonoBehaviour:
   m_TargetMovementOnly: 1
   m_ScreenX: 0.33440018
   m_ScreenY: 0.3129505
-  m_CameraDistance: 2.22
+  m_CameraDistance: 8
   m_DeadZoneWidth: 0
   m_DeadZoneHeight: 0
   m_DeadZoneDepth: 0
